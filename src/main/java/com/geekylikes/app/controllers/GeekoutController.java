@@ -6,12 +6,10 @@ import com.geekylikes.app.repositories.GeekoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/geekouts")
 public class GeekoutController {
     @Autowired
     GeekoutRepository repository;
@@ -26,6 +24,12 @@ public class GeekoutController {
         System.out.println(geekout.getDeveloper().getId());
 
         return new ResponseEntity<>(repository.save(geekout), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> destroyGeekout(@PathVariable Long id) {
+        repository.deleteById(id);
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);
     }
 
 }
