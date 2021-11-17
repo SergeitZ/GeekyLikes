@@ -1,6 +1,8 @@
 package com.geekylikes.app.controllers;
 
-import com.geekylikes.app.models.Developer;
+import com.geekylikes.app.models.avatar.Avatar;
+import com.geekylikes.app.models.developer.Developer;
+import com.geekylikes.app.repositories.AvatarRepository;
 import com.geekylikes.app.repositories.DeveloperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -11,11 +13,15 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/developers")
 public class DeveloperController {
     @Autowired
     private DeveloperRepository repository;
+
+    @Autowired
+    private AvatarRepository avatarRepository;
 
     @GetMapping
     public @ResponseBody List<Developer> getDevelopers() {
@@ -38,7 +44,21 @@ public class DeveloperController {
         return new ResponseEntity<>(repository.save(newDeveloper), HttpStatus.CREATED);
     }
 
-    @PutMapping("/id")
+    @PostMapping("/photo")
+    public ResponseEntity<Developer> addPhoto (@RequestBody Developer dev) {
+        return null;
+    }
+
+    @PutMapping("/language")
+    public @ResponseBody Developer addLanguage (@RequestBody Developer updates) {
+        Developer developer = repository.findById(updates.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        developer.languages.addAll(updates.getLanguages());
+
+        return repository.save(developer);
+    }
+
+    @PutMapping("/{id}")
     public @ResponseBody Developer updateEmployee (@PathVariable Long id, @RequestBody Developer updates) {
         Developer developer = repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
@@ -47,7 +67,7 @@ public class DeveloperController {
         if (updates.getName() != null) developer.setName(updates.getName());
         if (updates.getEmail() != null) developer.setEmail(updates.getEmail());
         if (updates.getCohort() != null) developer.setCohort(updates.getCohort());
-        if (updates.getLanguages() != null) developer.setLanguages(updates.getLanguages());
+        if (updates.languages != null) developer.languages = updates.languages;
 
         return repository.save(developer);
     }

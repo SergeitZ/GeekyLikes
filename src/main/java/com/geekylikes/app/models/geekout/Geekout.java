@@ -1,4 +1,6 @@
-package com.geekylikes.app.models;
+package com.geekylikes.app.models.geekout;
+
+import com.geekylikes.app.models.developer.Developer;
 
 import javax.persistence.*;
 
@@ -28,28 +30,28 @@ public class Geekout {
         return id;
     }
 
-    public Developer getDeveloper() {
-        return developer;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Developer getDeveloper() {
+        return developer;
     }
 
     public void setDeveloper(Developer developer) {
         this.developer = developer;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public void setContent(String content) {
