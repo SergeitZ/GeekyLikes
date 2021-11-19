@@ -45,8 +45,17 @@ public class DeveloperController {
     }
 
     @PostMapping("/photo")
-    public ResponseEntity<Developer> addPhoto (@RequestBody Developer dev) {
-        return null;
+    public Developer addPhoto (@RequestBody Developer dev) {
+        Developer developer = repository.findById(dev.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        // check if developer has an avatar and if so, delete or modify existing avatar before creating new.
+        if(developer.getAvatar() != null) {
+            Avatar oldAvatar = developer.getAvatar();
+            developer.setAvatar(null);
+            avatarRepository.delete(oldAvatar);
+        }
+        Avatar avatar = avatarRepository.save(dev.getAvatar());
+        developer.setAvatar(avatar);
+        return repository.save(developer);
     }
 
     @PutMapping("/language")

@@ -17,15 +17,11 @@ public class Avatar {
     private long id;
     private String url;
 
-    @OneToOne
-    private Developer developer;
-
     public Avatar() {
     }
 
-    public Avatar(String url, Developer developer) {
+    public Avatar(String url) {
         this.url = url;
-        this.developer = developer;
     }
 
     public long getId() {
@@ -40,15 +36,8 @@ public class Avatar {
         return url;
     }
 
-    public Developer getDeveloper() {
-        return developer;
-    }
-
     public void setUrl(String url) {
         this.url = url;
     }
 
-    public void setDeveloper(Developer developer) {
-        this.developer = developer;
-    }
 }

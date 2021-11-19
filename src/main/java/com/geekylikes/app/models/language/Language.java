@@ -1,10 +1,17 @@
 package com.geekylikes.app.models.language;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.geekylikes.app.models.developer.Developer;
 
 import javax.persistence.*;
 import java.util.Set;
+
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 
 @Entity
 public class Language {
@@ -14,7 +21,6 @@ public class Language {
     private String name;
     private String tag;
 
-//    @JsonBackReference
     @ManyToMany
     @JoinTable(
             name = "developer_language",

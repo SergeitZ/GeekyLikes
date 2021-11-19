@@ -1,44 +1,55 @@
 package com.geekylikes.app.models.developer;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.geekylikes.app.models.avatar.Avatar;
 import com.geekylikes.app.models.geekout.Geekout;
 import com.geekylikes.app.models.language.Language;
-import org.springframework.context.annotation.Role;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 
 @Entity
 public class Developer {
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
     private String name;
     private String email;
     private Integer cohort;
 //    private String[] languages;
     @OneToMany
     @JoinColumn(name = "developer_id", referencedColumnName = "id")
-    private List<Geekout> geekout;
+    private List<Geekout> geekouts;
 
-    @JsonManagedReference
     @ManyToMany
     @JoinTable(
             name = "developer_language",
             joinColumns = @JoinColumn(name = "developer_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id")
     )
-    public Set<Language> languages;
+    public Set<Language> languages = new HashSet<>();
+
+    @OneToOne
+    private Avatar avatar;
 
     public Developer() {};
 
-    public Developer(String name, String email, Integer cohort, List<Geekout> geekout, Set<Language> languages) {
+    public Developer(String name, String email, Integer cohort, List<Geekout> geekouts, Set<Language> languages, Avatar avatar) {
         this.name = name;
         this.email = email;
         this.cohort = cohort;
-        this.geekout = geekout;
+        this.geekouts = geekouts;
         this.languages = languages;
+        this.avatar = avatar;
     }
 
     public long getId() {
@@ -79,5 +90,21 @@ public class Developer {
 
     public void setLanguages(Set<Language> languages) {
         this.languages = languages;
+    }
+
+    public List<Geekout> getGeekouts() {
+        return geekouts;
+    }
+
+    public void setGeekouts(List<Geekout> geekouts) {
+        this.geekouts = geekouts;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
     }
 }
