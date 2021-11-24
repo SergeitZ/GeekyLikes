@@ -2,8 +2,10 @@ package com.geekylikes.app.controllers;
 
 import com.geekylikes.app.models.avatar.Avatar;
 import com.geekylikes.app.models.developer.Developer;
+import com.geekylikes.app.models.geekout.Geekout;
 import com.geekylikes.app.repositories.AvatarRepository;
 import com.geekylikes.app.repositories.DeveloperRepository;
+import com.geekylikes.app.repositories.GeekoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -23,15 +25,27 @@ public class DeveloperController {
     @Autowired
     private AvatarRepository avatarRepository;
 
+    @Autowired
+    private GeekoutRepository geekoutRepository;
+
     @GetMapping
     public @ResponseBody List<Developer> getDevelopers() {
         return repository.findAll();
     }
 
+    @GetMapping("/lang/{langId}")
+    public List<Developer> getDevsByLanguage(@PathVariable Long langId) {
+        return repository.findAllByLanguages_id(langId);
+    }
+
     @GetMapping("/cohort/{cohort}")
     public ResponseEntity<List<Developer>> getDeveloperByCohort (@PathVariable Integer cohort) {
         return new ResponseEntity<>(repository.findAllByCohort(cohort, Sort.by("name")), HttpStatus.OK);
+    }
 
+    @GetMapping("/likes/{devId}")
+    public List<Geekout> getApprovedGeekouts (@PathVariable Long devId) {
+        return geekoutRepository.findAllByApprovals_developer_id(devId);
     }
 
     @GetMapping("/{id}")
