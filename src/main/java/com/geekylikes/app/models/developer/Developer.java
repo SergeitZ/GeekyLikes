@@ -1,8 +1,7 @@
 package com.geekylikes.app.models.developer;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
+import com.geekylikes.app.models.approve.Approve;
 import com.geekylikes.app.models.avatar.Avatar;
 import com.geekylikes.app.models.geekout.Geekout;
 import com.geekylikes.app.models.language.Language;
@@ -26,9 +25,9 @@ public class Developer {
     private String email;
     private Integer cohort;
 //    private String[] languages;
-    @OneToMany
-    @JoinColumn(name = "developer_id", referencedColumnName = "id")
-    private List<Geekout> geekouts;
+//    @OneToMany
+//    @JoinColumn(name = "developer_id", referencedColumnName = "id")
+//    private List<Geekout> geekouts;
 
     @ManyToMany
     @JoinTable(
@@ -36,20 +35,22 @@ public class Developer {
             joinColumns = @JoinColumn(name = "developer_id"),
             inverseJoinColumns = @JoinColumn(name = "language_id")
     )
+    @JsonIgnoreProperties("developers")
     public Set<Language> languages = new HashSet<>();
+
+    @OneToMany(mappedBy = "developer", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Approve> approvals;
 
     @OneToOne
     private Avatar avatar;
 
     public Developer() {};
 
-    public Developer(String name, String email, Integer cohort, List<Geekout> geekouts, Set<Language> languages, Avatar avatar) {
+    public Developer(String name, String email, Integer cohort) {
         this.name = name;
         this.email = email;
         this.cohort = cohort;
-        this.geekouts = geekouts;
-        this.languages = languages;
-        this.avatar = avatar;
     }
 
     public long getId() {
@@ -92,13 +93,13 @@ public class Developer {
         this.languages = languages;
     }
 
-    public List<Geekout> getGeekouts() {
-        return geekouts;
-    }
-
-    public void setGeekouts(List<Geekout> geekouts) {
-        this.geekouts = geekouts;
-    }
+    //    public List<Geekout> getGeekouts() {
+//        return geekouts;
+//    }
+//
+//    public void setGeekouts(List<Geekout> geekouts) {
+//        this.geekouts = geekouts;
+//    }
 
     public Avatar getAvatar() {
         return avatar;
